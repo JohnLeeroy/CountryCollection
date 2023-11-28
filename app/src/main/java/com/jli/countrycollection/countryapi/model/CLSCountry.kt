@@ -1,11 +1,11 @@
 package com.jli.countrycollection.countryapi.model
 
-data class Country(
+data class CLSCountry(
     val capital: String,
     val code: String,
-    val currency: Currency,
+    val currency: CLSCurrency,
     val flag: String,
-    val language: Language,
+    val language: CLSLanguage,
     val name: String,
     val region: String,
     val demonym: String?
