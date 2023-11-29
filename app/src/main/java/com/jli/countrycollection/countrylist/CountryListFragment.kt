@@ -10,6 +10,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import com.jli.countrycollection.R
 import com.jli.countrycollection.countrylist.ui.CountryListAdapter
 import com.jli.countrycollection.databinding.CountryListFragmentBinding
 import kotlinx.coroutines.launch
@@ -33,18 +35,38 @@ class CountryListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.countryListRecyclerView.adapter = countryListAdapter
         binding.countryListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        countryListViewModel.getCountryList()
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                countryListViewModel.uiState.collect {
-                    countryListAdapter.submitList(it)
+                countryListViewModel.uiState.collect { state ->
+                    when (state) {
+                        is CountryListState.Uninitialized -> {
+                            countryListViewModel.getCountryList()
+                        }
+                        is CountryListState.CountryListFetched -> {
+                            setLoadingIndicator(false)
+                            countryListAdapter.submitList(state.countryList)
+                        }
+                        is CountryListState.Loading -> {
+                            setLoadingIndicator(true)
+                        }
+                        is CountryListState.Error -> {
+                            setLoadingIndicator(false)
+                            Snackbar.make(view, state.message, Snackbar.LENGTH_LONG)
+                                .setAction(getString(R.string.retry)) { countryListViewModel.getCountryList() }
+                                .show()
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private fun setLoadingIndicator(isVisible: Boolean) {
+        binding.loadingIndicator.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {

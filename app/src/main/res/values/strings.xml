@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CountryCollection</string>
+    <string name="retry">Retry</string>
+    <string name="network_error_fetching_country_list">Network error fetching country list</string>
 </resources>
