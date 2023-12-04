@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.test.espresso:espresso-contrib:3.5.1")
     val activity_version = "1.8.1"
     val fragment_version = "1.6.2"
     val nav_version = "2.7.5"
