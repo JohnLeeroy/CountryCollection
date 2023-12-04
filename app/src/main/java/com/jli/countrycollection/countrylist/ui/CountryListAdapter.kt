@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.jli.countrycollection.databinding.CountryRowBinding
 
-class CountryListAdapter : ListAdapter<CountryUiModel, CountryRowViewHolder>(DIFF_CALLBACK) {
+class CountryListAdapter(val onItemClicked: (CountryUiModel) -> Unit) : ListAdapter<CountryUiModel, CountryRowViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryRowViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return CountryRowViewHolder(CountryRowBinding.inflate(inflater, parent, false))
@@ -14,6 +14,9 @@ class CountryListAdapter : ListAdapter<CountryUiModel, CountryRowViewHolder>(DIF
 
     override fun onBindViewHolder(holder: CountryRowViewHolder, position: Int) {
         holder.bind(getItem((position)))
+        holder.itemView.setOnClickListener {
+            onItemClicked(getItem(position))
+        }
     }
 
     private companion object {

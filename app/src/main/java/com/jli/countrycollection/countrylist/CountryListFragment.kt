@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.jli.countrycollection.R
@@ -21,7 +22,10 @@ class CountryListFragment : Fragment() {
     private var _binding: CountryListFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val countryListAdapter = CountryListAdapter()
+    private val countryListAdapter = CountryListAdapter {
+        val action = CountryListFragmentDirections.actionCountryListFragmentToCountryDetailFragment(it)
+        findNavController().navigate(action)
+    }
 
     private val countryListViewModel: CountryListViewModel by viewModels { CountryListViewModel.Factory }
     override fun onCreateView(
